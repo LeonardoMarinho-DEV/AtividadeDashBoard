@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Temperatura e Umidade</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard">
+        <h1>Temperatura e Umidade</h1>
+        
+        <div class="row">
+            <div class=" média status">
+                <h3>Temperatura Média</h3>
+                <p>22.3°C</p> <!--calculei a média com base nos dados informados na tabela -->
+            </div>
+            <div class="média status">
+                <h3>Umidade Média</h3>
+                 <p>85.5%</p> <!--calculei a média -->
+            </div>
+        </div>
+        
+        <h2>Temperatura e Umidade por Horário</h2>
+        <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+        </div>
+        
+        <h2>Temperatura e Umidade por Mês</h2>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    // dados do gráfico de linhas
+    const horarios = ['12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+    const temperaturas = [30, 29, 28, 25, 22, 23];
+    const umidades = [80, 82, 80, 85, 80, 83];
+    // dados do gráfico de barras       
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
+    const tempMedias = [22, 24, 27, 23, 20, 18];
+    const umidMedias = [90, 89, 93, 87, 88, 82];
+    // gráfico de linhas
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(lineCtx, {
+        type: 'line', //aqui entendi que definimos o tipo de gráfico que queremos.
+        data: {
+            labels: horarios,
+            datasets: [{
+                    label: 'Temperatura (°C)',
+                    data: temperaturas,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    yAxisID: 'y' },
+                {
+                    label: 'Umidade (%)',
+                    data: umidades,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Variação de Temperatura e Umidade ao Longo do Dia'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear', 
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Temperatura (°C)'
+                    },
+                    min: 15,
+                    max: 35
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Umidade (%)'
+                    },
+                    min: 75,
+                    max: 90,
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+    
+    // Configuração do gráfico de barras
+    const barCtx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(barCtx, {
+        type: 'bar',// aqui foi onde eu defini a barra vermelha
+        data: {
+            labels: meses,
+            datasets: [
+                {
+                    label: 'Temperatura Média (°C)',
+                    data: tempMedias,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Umidade Média (%)',
+                    data: umidMedias,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1,
+                    type:"bar", // aqui foi onde eu defini a barra azul
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Médias Mensais de Temperatura e Umidade'
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Temperatura Média (°C)'
+                    },
+                    min: 15,
+                    max: 30
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Umidade Média (%)'
+                    },
+                    min: 80,
+                    max: 95,
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+</script>
